@@ -18,3 +18,29 @@ Learn more about the course and enroll here: [100xDevs](https://app.100xdevs.com
 
 The repository is organized by weeks, with each folder containing the practice code and exercises for that particular week.
 
+## How to Use
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/practice-code-harkirat-singh.git
+    cd practice-code-harkirat-singh
+    ```
+
+2. Navigate to the desired week's folder:
+    ```bash
+    cd Week-1
+    ```
+
+3. Run the code:
+    ```bash
+    node exercise1.js
+    ```
+
+## Contributing
+
+Contributions are welcome! If you find any bugs or want to add new features, feel free to create a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
