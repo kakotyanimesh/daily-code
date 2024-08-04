@@ -1,0 +1,62 @@
+
+body {
+    background-color: #030712;
+    color: #fafafa;
+    font-family: harkiratfont;
+}
+
+@font-face {
+    font-family: "harkiratfont";
+    src: url('./a34f9d1faa5f3315-s.p.ttf'); /* Include font format */
+  }
+.navbar{
+    background-color: #09090b;
+    padding-left: 6.27604871447903vw;
+    padding-right: 6.27604871447903vw;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar div {
+    padding-bottom: 17px;
+}
+
+.navbar button, input{
+    font-size: 20px;
+    background-color: #030712;
+    color: #fafafa;
+    border-radius: 5px;
+    padding: 6px;
+}
+
+.inputBox{
+    width: 90px;
+}
+
+.learning h2{
+    margin-top: 24px;
+    font-size: 32px;
+    /* font-weight: 400; */
+    line-height: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.container-{
+    
+    margin-top: 15px;
+    margin-left: 245px;
+    margin-right: 245px;
+    display: flex;
+    justify-content: space-between;
+    border: 2px solid white;
+    border-radius: 60px;
+}
+
+.container- a{
+    font-size: 16px;
+    padding: 18px;
+    text-decoration: none;
+    color: #fafafa;
+}
