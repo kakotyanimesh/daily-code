@@ -1,0 +1,55 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: "harkiratfont";
+    src: url("./hack-bold.ttf");
+}
+body {
+    background-color: #0e1525;
+    color: #f5f9fc;
+    font-family: harkiratfont;
+}
+
+.navBar{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+.leftNav{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+.middleNav button {
+    background-color: green;
+    width: 60px;
+    height: 30px;
+    border-radius: 10px;
+    border: none; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    
+}
+
+.middleNav button i {
+    
+    font-size: 20px; 
+}
+
+
+.rightNav button, i{
+    font-family: harkiratfont;
+    font-size: 14px;
+}
