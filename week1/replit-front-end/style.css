@@ -9,6 +9,11 @@
     font-family: "harkiratfont";
     src: url("./hack-bold.ttf");
 }
+@font-face {
+    font-family: "harkiratfontTwo";
+    src: url("./ibm-plex-sans-v8-latin-regular.ttf");
+}
+
 body {
     background-color: #0e1525;
     color: #f5f9fc;
@@ -52,4 +57,108 @@ body {
 .rightNav button, i{
     font-family: harkiratfont;
     font-size: 14px;
+    
+}
+
+.menu {
+    
+    display: flex;
+    justify-content: space-between;
+    /* border-right: 2px solid rgb(222, 218, 218); */
+    margin-left: 15px;
+    margin-top: 20px;
+}
+
+.leftMenu {
+    border-right: 2px solid white;
+    padding-right: 15px;
+}
+
+/* 
+.filesicon{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+} */
+
+.files{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 0.5px solid  white;
+}
+
+
+.files h1{
+    font-size: 15px;
+    /* font-style: italic; */
+    font-weight: 100;
+}
+
+
+.filesicon i{
+    font-size: 16px;
+}
+
+
+
+.middleMenu{
+    /* display: flex;
+    justify-content: space-between;
+    gap: 43vw; */
+    border-right: 2px solid rgb(10, 10, 29);
+    padding-right: 10px;
+}
+
+.indexmenu{
+    display: flex;
+    justify-content: space-between;
+    gap: 43vw;
+}
+
+.aiclasss span {
+    border-right: 2px solid white;
+}
+
+.vscode h1{ 
+    font-size: 20px;
+    font-family: harkiratfontTwo;
+    font-weight: 400;
+}
+
+.line-number {
+    padding-right: 20px; 
+}
+
+.code{
+    color: #57abff;
+}
+
+.spaninside{
+    color: #ffbd7a;
+}
+
+.line-numbernew{
+    padding-right: 45px;
+
+}
+
+.line-numberdouble{
+    padding-right: 10px;
+}
+
+.codetext{
+    color: #f5f9fc;
+    padding-left: 45px;   
+}
+
+.codetextscript{
+    padding-left: 45px;
+    color: #57abff;
+}
+
+.whiteback{
+    background-color: white;
+    height: 100%;
+    color: black;
 }
