@@ -13,49 +13,55 @@ function sumN(n) {
     return ans
     
 }
-
-
 console.log(sumN(3));
 
 const { rejects } = require("assert");
 const { log } = require("console");
 
 
+// cpu bound tasks => usage of cpu happens {limited by cpu power} => for loop 
+ 
 
-
-
-// input output heavy operations 
+// input output heavy operations => ops that are happens when we give input something and get output something 
 // readfile is a i/o , waiting for some time and HTTP request 
 //  settimeout also i/o
 // read a file code => fs{file system} is a external file that read a file 
+// fs => Read files Create files,  Update files.  Delete files, Rename files => google it 
 // fs gives two function => readFile and readFileSync : google it
-
+ 
 const fs = require("fs");
+const { callbackify } = require("util");
 // const { resolve } = require("path");
 
-const contents = fs.readFileSync("a.txt", "utf-8") // this is a synchronous call => running one by one
+const contents = fs.readFileSync("a.txt", "utf-8") 
 console.log(contents);
-
 const contentsNew = fs.readFileSync("b.txt", "utf-8")
-
 console.log(contentsNew);
+// the above is a synchronous call => running one by one  => readFileSync is a sync ops 
+// here the data is store in varible 
 
+// but readFile is async ops => it has callback which store the data after reading it
 // use readFile to run asynchronously 
 
 fs.readFile("a.txt", "utf-8", (err, contents) =>{
     console.log(contents);
 })
 
-fs.readFile("aaa.txt", "utf-8", (err, data) =>{
+// let's write in a understandable way
+
+function callbackfunction(err, readData){
     if(err){
-        console.log("file not found");
-        
+        console.log(err);
     } else {
-        console.log(data);
+        console.log(readData);
         
     }
-})
-
+}
+fs.readFile("b.txt", "utf-8", callbackfunction)
+// as readFile is a async call => it will go to micro Task queue 
+// so the taks that are not in micro or macro will execute first 
+// after that readFile run 
+// readFileSync can't able to enter microTq
 
 
 // Functional arguments => passing a function a as an argument to another function
@@ -85,6 +91,19 @@ console.log(doOps(2, 4, multtiply));
 
 
 
+
+const set = (name) => {
+    setTimeout(() => {
+        console.log(`${name}`);
+        
+    }, 1000);
+}
+set("anieh")
+
+setTimeout((para) => {
+    console.log(`${para}`);
+    
+}, 1000, "kaka");
 
 
 
