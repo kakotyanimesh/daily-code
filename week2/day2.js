@@ -288,3 +288,5 @@ fileReader("asd.txt")
 fileReader("b.txt")
 
 // the code from 245 and code from 267 are same => in 247 we use iife but in 245 we write directily promise after await 
+
+
