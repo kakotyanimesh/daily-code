@@ -59,8 +59,8 @@ const todoAppend = document.getElementById("todoId")
 }
 
 
-function clearTodo() {
-    const elem
+// function clearTodo() {
+//     const elem
     
     
-}
+// }
