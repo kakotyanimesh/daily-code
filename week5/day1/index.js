@@ -16,49 +16,56 @@
 
 
 const express = require("express");
-const bodyParser = require('body-parser')
-
-
-
 const app = express();
+const port = 3002
 
-app.use(bodyParser.json())
-app.get("/sum/:a/:b", function(req, res) {
-    const a = parseInt(req.params.a) 
-    // params => to get 
+
+// write a middleware 
+app.use((req, res, next) => {
+    console.log("req received !!");
+    next() // calling the next thing 
+    /*res.json({
+        message : " we are breaking the req, res cyle u are not allowed " 
+    })
+     above code we send a response before the response from any handler => breaking the req, res 🚲 
+    */
+    
+})
+
+//http://localhost:3002/sum/2/2
+app.get('/sum/:a/:b', (req, res) => {
+    const a = parseInt(req.params.a)
     const b = parseInt(req.params.b)
 
-    res.send(
-        {ans  : a + b}
-    )
-});
-
-app.get("/multiply", function(req, res) {
-    const a = req.query.a
-    const b = req.query.b
-
-    res.send({
-        ans: a * b
-    })
-});
-
-app.get("/divide", function(req, res) {
-    const a = req.query.a
-    const b = req.query.b
-
-    res.send({
-        ans: a / b
+    res.json({
+        "summ" : a + b
     })
 
-});
+})
 
-app.get("/subtract", function(req, res) {
-    const a = req.query.a
-    const b = req.query.b
 
-    res.send({
-        ans: a - b
+/* 
+    there's something known as route specific middlewares also => which basically means those will run in a specific route only, we dont use app.use() => for route specific middlewares => 
+                        simply define the function 
+*/
+
+
+function routeSpecificMiddleware (req, res, next) {
+    console.log(`the request went through ${req.method} method and url is ${req.url}`);
+    next()
+    
+}
+
+
+app.get('/routeSpecificMulti/:a/:b', routeSpecificMiddleware, (req, res) => {
+    const a = parseInt(req.params.a)
+    const b = parseInt(req.params.b)
+// here both app.use wala middleware and specific mW will run 
+    res.json({
+        multiply : a * b
     })
-});
+})
 
-app.listen(3000);
+
+
+app.listen(port, () => console.log(`the port is running at ${port}`));
