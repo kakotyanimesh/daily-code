@@ -11,7 +11,7 @@ let httpCount = 0
 // middlewares have to write inside app.use()
 app.use((req, res, next) => {
     const date = new Date().toLocaleTimeString()
-    console.log(`the http method is ${req.method}, with url: ${req.url} and time is ${date}`);
+    console.log(`the http method is ${req.method}, with url: ${req.hostname} and time is ${date}`);
     // middle is something that has access to req, res handlers => it will execute everytime for any http request 
     // use post man to confirm the code => as browser's default behaviour is to send get request everytime even after defining a method also 
     httpCount++

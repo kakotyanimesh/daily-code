@@ -24,6 +24,7 @@ const port = 3002
 app.use((req, res, next) => {
     console.log("req received !!");
     next() // calling the next thing 
+    
     /*res.json({
         message : " we are breaking the req, res cyle u are not allowed " 
     })
