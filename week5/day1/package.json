@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "node index.js",
-    "dev": "node middlewares.js"
+    "dev": "node middlewares.js",
+    "axios": "node axios.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.7",
     "body-parser": "^1.20.2",
     "express": "^4.19.2"
   }
