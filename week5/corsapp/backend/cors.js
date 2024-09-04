@@ -1,3 +1,9 @@
+/*
+    RESOURCES 
+        1. https://www.stackhawk.com/blog/nodejs-cors-guide-what-it-is-and-how-to-enable-it/#open-or-public-apis
+        2. https://www.npmjs.com/package/cors?activeTab=readme
+*/
+
 const express = require('express')
 const colors = require('./colors.json')
 const cors = require('cors')
@@ -20,3 +26,5 @@ app.get('/colors', (req, res) => {
 
 
 app.listen(port, () => console.log(`the app is running at http://localhost:${port}/colors`))
+
+
