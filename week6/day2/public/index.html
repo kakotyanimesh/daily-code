@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+</head>
+<script>
+    const signUp = async () => {
+        const username = document.getElementById("username-signup").value
+        const password = document.getElementById("password-signup").value
+
+        // console.log(username);
+        // console.log(password);
+        await axios.post('http://localhost:3000/signUp', {
+            username, 
+            password
+        })
+        
+        alert('user created !!')
+    }
+
+    const signIn = async () => {
+        const username = document.getElementById("username-signup").value
+        const password = document.getElementById("password-signup").value
+        
+        const response = await axios.post('http://localhost:3000/singIn', {
+            username, 
+            password
+        })
+
+        localStorage.setItem("token", response.data.token)
+        console.log(response);
+        
+        alert('signed in ')
+    }
+
+
+    const logOut = async () => {
+        await localStorage.removeItem("item")
+    }
+
+    const getUser = async () => {
+        const token = localStorage.getItem('token')
+
+        if(token) {
+            const response = await axios.get("http://localhost:3000/me", {
+                headers : {
+                    Authorization : token
+                }
+            })
+            document.getElementById("user-info").innerHTML = response.data.username
+        }
+
+    }
+
+    getUser()
+
+</script>
+<body>
+    <div>
+        signUp
+        <input type="text" name="username" id="username-signup">
+        <input type="text" name="password" id="password-signup">
+        <button onclick="signUp()">signUp</button>
+
+    </div>
+    <div>
+        signIn
+        <input type="text" name="username" id="username-signIn">
+        <input type="text" name="password" id="password-signIn">
+        <button onclick="signIn()">signIn</button>
+
+    </div>
+    <div>
+        user in formation
+        <div id="user-info"></div>
+    </div>
+    <div>
+        <button class="logOut()">logOut</button>
+    </div>
+</body>
+</html>
