@@ -46,7 +46,7 @@ const App = () => {
   return (
     <div className='flex flex-col justify-center mt-20 items-center'>
       <div className=''>
-        <h1 className='text-[#C5EFEF] text-lg px-14 font-bold'>AXIOS Under The Hood </h1>
+        <h1 className='text-black text-lg px-14 font-bold'>AXIOS Under The Hood </h1>
       <div className='flex space-x-5 mt-2 '>
         <button type='button' className='bg-[#008080] p-2 rounded-lg border-gray-600' onClick={generateApi}>Generate API</button>
         <button type='button' className='bg-[#008080] p-2 rounded-lg border-gray-600' onClick={getData}>Get</button>
