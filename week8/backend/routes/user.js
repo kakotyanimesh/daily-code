@@ -5,8 +5,10 @@ const bcrypt = require('bcrypt')
 const z = require('zod')
 const jwt = require("jsonwebtoken")
 const userRouter = Router()
-const { userModel } = require('../db')
-const userAuth = require('../middlewares/user')
+const { userModel, PurchaseModel } = require('../db')
+// const userAuth = require('../middlewares/user')
+const { userAuth } = require('../middlewares/user')
+
 
 
 userRouter.post('/signup', async (req, res) => {
@@ -68,7 +70,7 @@ userRouter.post('/signin', async (req,res) => {
 
         const token = jwt.sign({
             id : user._id
-        }, process.env.jwt_secret_user, {expiresIn : '5hr'})
+        },process.env.jwt_secret_user, {expiresIn : '5hr'})
 
         res.status(200).json({
             token : token,
@@ -82,13 +84,24 @@ userRouter.post('/signin', async (req,res) => {
 })
 
 
-// userRouter.get('/purchasedCourses', userAuth, (req, res) => {
-//     res.send("animesdh")
-// })
+userRouter.get('/purchasedCourse', userAuth, async (req, res) => {
+    try {
+        const userId = req.id
 
-// userRouter.get('/purchasedCourse', userAuth, async (req, res) => {
-    
-// })
+        const courses = await PurchaseModel.find({userId})
+        
+        res.json({
+            courses
+        })
+    } catch (error) {
+        res.status(500).json({
+            message : 'error fetching the couse',
+            error : error
+        })
+    }
+});
+
+
 
 
 module.exports = {

@@ -157,8 +157,17 @@ adminRouter.put('/updateCourse', adminAuth, async (req, res) => {
     }
 })
 
-adminRouter.get('/course/bulk', adminAuth, (req, res) => {
-    res.send("asdasdasd")
+adminRouter.get('/course/bulk', adminAuth, async (req, res) => {
+    const adminID = req.id
+
+    const courses = await courseModel.find({
+        creatorID: adminID
+    })
+
+    res.status(200).json({
+        message : ' courses fetchde',
+        courses
+    })
 })
 
 
