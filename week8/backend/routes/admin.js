@@ -5,8 +5,9 @@ const z = require('zod')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { adminAuth } = require('../middlewares/admin')
+const { default: errorMap } = require('zod/locales/en.js')
 require('dotenv').config()
-const jwt_secret = process.env.jwt_secret
+// const jwt_secret = process.env.jwt_secret
 
 adminRouter.post('/signup', async (req, res) => {
     try {
@@ -52,14 +53,14 @@ adminRouter.post('/signin', async (req, res) => {
     try {
         const { email, password } = req.body
 
-        const user = await adminModel.findOne({email})
+        const admin = await adminModel.findOne({email})
 
-        const comparePassword = bcrypt.compare(password, user.password)
+        const comparePassword = bcrypt.compare(password, admin.password)
 
-        if(user && comparePassword){
+        if(admin && comparePassword){
             const token = jwt.sign({
-                id : user._id
-            }, jwt_secret, {expiresIn : '24hr'})
+                id : admin._id
+            }, process.env.jwt_secret_admin, {expiresIn : '24hr'})
 
             res.status(200).json({
                 message : 'user signed in ', 
@@ -93,7 +94,7 @@ adminRouter.post('/createCourse', adminAuth,async (req, res) => {
         }
 
         const { title, description, price } = parsedCourse.data
-        await courseModel.create({
+        const course = await courseModel.create({
             title :  title,
             description : description,
             price : price,
@@ -101,7 +102,8 @@ adminRouter.post('/createCourse', adminAuth,async (req, res) => {
         })
 
         res.status(200).json({
-            message : 'course created successfully '
+            message : 'course created successfully ',
+            courseid : course._id 
         })
     } catch (error) {
         res.status(404).json({
@@ -111,11 +113,51 @@ adminRouter.post('/createCourse', adminAuth,async (req, res) => {
 })
 
 
-adminRouter.put('/updateCourse', (req, res) => {
+adminRouter.put('/updateCourse', adminAuth, async (req, res) => {
+    try {
+        const adminId = req.id
 
+        const updateObject = z.object({
+            title : z.string().min(5, {message : 'min 5 character is allowed'}).max(15, {message : 'max 20 is allowed'}),
+            description : z.string().min(10, {message : 'min 10 is allowed'}).max(30, {message : 'max 30 is allowed'}),
+            price : z.number(),
+            courseiD : z.string()
+        })
+
+        const parsedUpdatedObject = updateObject.safeParse(req.body)
+
+        if(!parsedUpdatedObject.success){
+            return res.status(403).json({
+                message : 'invalid datas',
+                error : parsedUpdatedObject.error.errors
+            })
+        }
+
+        const { title, description, price, courseiD } = parsedUpdatedObject.data
+
+        await courseModel.updateOne({
+            _id : courseiD,
+            creatorID : adminId
+        }, {
+            title, 
+            description, 
+            price
+            // image upload 
+        })
+
+        res.status(200).json({
+            message : 'course updated successfully',
+            courseID : courseiD
+        })
+
+    } catch (error) {
+        res.status(403).json({
+            message : `something went wrong while updating the course ${error}`
+        })
+    }
 })
 
-adminRouter.get('/bulk', adminAuth, (req, res) => {
+adminRouter.get('/course/bulk', adminAuth, (req, res) => {
     res.send("asdasdasd")
 })
 

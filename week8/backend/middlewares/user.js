@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 // require('dotenv').config()
-const jwt_secret = process.env.jwt_secret
+// const jwt_secret_user = process.env.jwt_secret
 
 
 const userAuth = (req, res, next) => {
@@ -13,7 +13,7 @@ const userAuth = (req, res, next) => {
     }
 
     try {
-        const decodedToken = jwt.verify(token, jwt_secret)
+        const decodedToken = jwt.verify(token, process.env.jwt_secret_user)
 
         req.id = decodedToken.id  // attached to req object's id 
         next()

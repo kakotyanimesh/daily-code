@@ -4,7 +4,6 @@ const { model } = require('mongoose')
 const bcrypt = require('bcrypt')
 const z = require('zod')
 const jwt = require("jsonwebtoken")
-const jwt_secret = process.env.jwt_secret
 const userRouter = Router()
 const { userModel } = require('../db')
 const userAuth = require('../middlewares/user')
@@ -69,7 +68,7 @@ userRouter.post('/signin', async (req,res) => {
 
         const token = jwt.sign({
             id : user._id
-        }, jwt_secret, {expiresIn : '5hr'})
+        }, process.env.jwt_secret_user, {expiresIn : '5hr'})
 
         res.status(200).json({
             token : token,

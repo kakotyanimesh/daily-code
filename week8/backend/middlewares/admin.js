@@ -11,7 +11,7 @@ const adminAuth = (req, res, next) => {
     }
 
     try {
-        const decodedToken = jwt.verify(token, process.env.jwt_secret)
+        const decodedToken = jwt.verify(token, process.env.jwt_secret_admin)
         req.id = decodedToken.id
         next()
     } catch (error) {
