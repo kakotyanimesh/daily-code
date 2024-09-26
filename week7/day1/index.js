@@ -9,7 +9,7 @@ const app = express()
 const port = 3000
 
 
-mongoose.connect('mongodb+srv://animeshkakoty07:Animesh@cluster0.kyw0y.mongodb.net/todo-app-day2')
+mongoose.connect('')
 
 
 app.use(express.json())
