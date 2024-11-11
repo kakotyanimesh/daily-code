@@ -8,9 +8,17 @@ const user : UserType = {
         country : "India"
     }
 }
-
-
 // type sfaety means how we are gonna assign types to non-premitives dT like array => interface
+
+// to give type to function we use : () => void 
+
+
+const timer = (func : () => void) => {
+    setTimeout(func, 3000);
+}
+
+timer(() => {console.log("aniesh")})
+
 
 interface UserType {
     firstName : string,
@@ -93,14 +101,85 @@ console.log(newStudent);
 console.log(newStudent.name);
 console.log(newStudent.department);
 
-const isAStudent = (name : string): string => {
+const isAStudent = (name : string, studentObject : Student): string => {
     // if(name === newStudent.name) {
     //     return `${name} is one of our Student`
     // } else return `nah he is not our student`
 
-    return name === newStudent.name ? `yes ${name}  is our student` : `nah ${name}  isnot our student`
+    return name === studentObject.name ? `yes ${name}  is our student` : `nah ${name}  isnot our student`
 }
 
-console.log(isAStudent("animesh"));
-console.log(isAStudent("asdadasd"));
-console.log(isAStudent("animes]]hasdasd"));
+console.log(isAStudent("animesh", newStudent));
+console.log(isAStudent("asdadasd", newStudent));
+console.log(isAStudent("animes]]hasdasd", newStudent));
+
+
+// its time for types (with =) => same as interfaces that helps to aggregate data together or define type to non-primitive data types
+
+type StudentType = {
+    name : string,
+    department : string,
+    rollNo : number
+}
+
+class UniversityStudentWithType implements StudentType {
+    constructor(public name : string, public department : string, public rollNo : number){
+        this.name = name
+        this.department = department
+        this.rollNo = rollNo
+    }
+}
+
+const againAnotherStudent = new UniversityStudentWithType("anmesh", "physc", 1212)
+
+console.log(againAnotherStudent.name);
+
+const newfunction = (name : string, studentObject : StudentType) : boolean => {
+    return name === studentObject.name ? true : false
+}
+
+
+console.log(newfunction("anmesh", againAnotherStudent));
+console.log(newfunction("anmesadadh", againAnotherStudent));
+console.log(newfunction("anmeshasdasd", againAnotherStudent));
+
+// we can do many other things in types basically the union and inserction thingy that cant be done a single interface but the intersection and union of interface can be done in type  
+
+
+interface Point2d {
+    x : number ,
+    y : number
+}
+
+const P1 : Point2d = {x : 12, y : 12}
+// const P2 : Point2d = { x : 12, y : 34, name : "adada"}  this gives error but there's a way
+const eascapeError = { x : 12, y :12 , name : "animesh", age : 23}
+
+const P3 : Point2d = eascapeError // now no error as the point2d can take anything but x and y : number have to be present 
+
+// no literal object without both x and y cant be part of Point2d
+const withoutXandY = {x : 12, name : "adadads"}
+// const P4 : Point2d = withoutXandY error from TS
+
+// intersection & 
+
+interface NameEntity {
+    name : string
+}
+
+type NameAndPoint2d = Point2d & NameEntity // an intersection of both interfaces 
+
+const np1 : NameAndPoint2d = {
+    name : "asdadasd",
+    x : 21,
+    y : 21
+}
+
+// the above thing is what intersection gives us as in some corner of Point2d interface there will be an a subset of values with property name of type string and in some corner of NameEntity interface there will be a subset that has property of x and y with type number as types in TypeScript is open 
+
+// const np2 : NameAndPoint2d = {
+//     x :21,
+//     name : "asdasdad"
+// } => we cant write this 
+
+// the above thingy is impossible as the y value is missing      
