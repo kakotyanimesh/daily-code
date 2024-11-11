@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* this three lines convert tailwind codes to css  */
+
+@font-face {
+    font-family: 'jeFont';
+    src: url(./assets/fontOne.otf);
+}
