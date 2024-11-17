@@ -104,6 +104,7 @@ const newObject = {
 const bothObject = {
     name: "Asdasdas",
     y: 12,
+    x: 12
 };
 console.log(bothObject);
 // const jibrich = {x : 12, y : 12, sirname : "adsadasd"}

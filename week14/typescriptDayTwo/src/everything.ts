@@ -175,6 +175,8 @@ const np1 : NameAndPoint2d = {
     y : 21
 }
 
+
+
 // the above thing is what intersection gives us as in some corner of Point2d interface there will be an a subset of values with property name of type string and in some corner of NameEntity interface there will be a subset that has property of x and y with type number as types in TypeScript is open 
 
 // const np2 : NameAndPoint2d = {
@@ -206,6 +208,7 @@ const newObject : BothNameEntityOrPoint2d = {
 const bothObject : BothNameEntityOrPoint2d = {
     name : "Asdasdas",
     y : 12,
+    x : 12
 }
 
 console.log(bothObject);
