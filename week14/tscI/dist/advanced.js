@@ -140,4 +140,72 @@ console.log(strTwo.split('o', 2));
 console.log(strTwo.toLocaleLowerCase());
 console.log(strTwo.toLocaleUpperCase());
 console.log(strTwo.toUpperCase());
-console.log(strTwo.includes('a'));
+console.log(strTwo.includes('animesh'));
+// declaration of array in ts 
+const arrOne = ['animesh', 'kakoty'];
+const arrTwo = [12, 13];
+const arrThree = ['anime', 'akkt'];
+const arrFour = [12, 144];
+const arrfive = ['animesh', 144];
+const arrsix = ['animesh', 144];
+// advanced ts like Pick stc
+console.log("advanced Typescript Api");
+const sum_Age = (user1, user2) => {
+    return user1.age + user2.age;
+};
+console.log(sum_Age({
+    name: "anime", age: 21
+}, {
+    name: 'adasdas', age: 22
+}));
+const displayUserProfile = (user) => {
+    console.log(`${user.email} and ${user.age}`);
+};
+displayUserProfile({
+    username: "Adsadads",
+    age: 21,
+    email: "adasdasdasd",
+    phoneNo: 2121212
+});
+const displayUsername = (username) => {
+    return `${username.username} and ${username.phoneNo}`;
+};
+console.log(displayUsername({ username: "Adsdas", age: 21, phoneNo: 2121212 }));
+const displayProfileWithPick = (user) => {
+    console.log(`${user.email} and ${user.age}`);
+};
+displayProfileWithPick({
+    email: "asdadad",
+    age: 21,
+    // username : "Adasdad"
+});
+// real life usecase while updating user data => let's say user wants to update the email only so he will pass the email thingy but if our type of userObject want all fields like username, password fullname then it will create problem and in that case we can use the Partial thingy => its your choise to pass which one u want to pass
+var Access;
+(function (Access) {
+    Access[Access["create"] = 0] = "create";
+    Access[Access["delete"] = 1] = "delete";
+    Access[Access["edit"] = 2] = "edit";
+})(Access || (Access = {}));
+const updateAdmin = (propObj) => {
+    // hit db and updates the details 
+};
+updateAdmin({
+    usernam: "adads",
+    accessProp: ["edit"]
+});
+const ApiFiles = {
+    apikey: 'asdadsads',
+    apiEndPoint: 'https://openAi.api.com'
+};
+// RECORD => When we want to define types in object => key value pairs 
+const userObject = {
+    'userID1-1232': { id: "Adsads", name: "asdadads" },
+    122: { id: "Adsads", name: "asdadads" },
+    false: { id: "Adsads", name: "asdadads" },
+};
+// MAP => fancy way to create Object in TYPESCRIPT 
+const userMap = new Map();
+userMap.set("animesh", { id: 1212, name: "!21212" });
+userMap.set("adsads", { id: "adadad", name: "!21adadad212" });
+console.log(userMap);
+console.log(userMap.get("animesh"));
