@@ -18,12 +18,14 @@ dotenv_1.default.config();
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const content_routes_1 = require("./routes/content.routes");
+const Validation_1 = require("./middlewares/Validation");
+const zod_1 = require("./utils/zod");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 const port = Number(process.env.PORT);
 // console.log(port);
 app.use('/api/v1', content_routes_1.contentRouter);
-app.use('/api/v1', user_routes_1.default);
+app.use('/api/v1', (0, Validation_1.ValidationMiddleware)(zod_1.signInObject), user_routes_1.default);
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(`${process.env.MONGO_URI}`);

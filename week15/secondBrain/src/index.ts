@@ -4,10 +4,9 @@ dotenv.config()
 import mongoose from 'mongoose'
 import userRouter  from './routes/user.routes'
 import { contentRouter } from './routes/content.routes'
-import { ValidationMiddleware } from './middlewares/Validation'
-import { signUp } from './controller/user.controller'
-import { signInObject } from './utils/zod'
 
+
+const mongoUri = process.env.MONGO_URI
 const app = express()
 app.use(express.json())
 const port: number = Number(process.env.PORT)
@@ -16,7 +15,7 @@ const port: number = Number(process.env.PORT)
 
 
 app.use('/api/v1', contentRouter)
-app.use('/api/v1', ValidationMiddleware(signInObject),userRouter)
+app.use('/api/v1',userRouter)
 
 
 const main = async() => {

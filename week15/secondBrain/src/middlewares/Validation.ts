@@ -1,4 +1,3 @@
-import { error } from "console";
 import { NextFunction,Request, RequestHandler, Response } from "express";
 import { ZodSchema } from "zod";
 
@@ -31,6 +30,7 @@ export const ValidationMiddleware = (schema : ZodSchema) : RequestHandler => {
             return
         }
 
+        // req.validatedObject = parsedObject.data
         next()
     }
 }
