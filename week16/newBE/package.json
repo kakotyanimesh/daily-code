@@ -1,27 +1,23 @@
 {
-  "name": "typescriptsetup",
+  "name": "newbe",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --build",
-    "start": "node ./dist/index.js",
+    "built": "tsc -b && node ./dist/index.js",
     "dev": "nodemon ./src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "express": "^4.21.1"
-  },
   "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/jest": "^29.5.14",
-    "jest": "^29.7.0",
+    "@types/ws": "^8.5.13",
     "nodemon": "^3.1.7",
-    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
   }
 }
