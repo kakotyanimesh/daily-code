@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'jakarta';
+  src: url('./assests/fonts/jakarta.ttf');
+}
+
+@font-face {
+  font-family: 'CabinetGrotesk';
+  src: url('./assets/fonts/CabinetGrotesk-Black.otf');
+}
+
+@font-face {
+  font-family: 'Hoover';
+  src: url('./assets/fonts/Hoover-Medium.ttf');
+}
