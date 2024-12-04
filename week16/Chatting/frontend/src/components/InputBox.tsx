@@ -1,8 +1,12 @@
+
 interface InputBoxInterface {
     placeholder : string,
     varients : 'chatBox' | 'default',
     // size : 'lg' | 'sm' | 'md',
+    ref ?: React.RefObject<HTMLInputElement>
 }
+
+// type for ref => React.RefObject<HTMLInputElement>
 
 
 
@@ -17,6 +21,7 @@ export const InputBox = (props : InputBoxInterface) => {
             type="text"
             placeholder={`${props.placeholder}`}
             className={`${varientsStyle[props.varients]}`}
+            ref = {props.ref}
         />
 
     )

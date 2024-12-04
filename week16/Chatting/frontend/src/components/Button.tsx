@@ -4,8 +4,10 @@ interface ButtonInterface {
     title ?: string,
     size : 'lg' | 'sm' | 'md',
     varients : 'primary' | 'secondary',
-    icon ?: ReactElement
+    icon ?: ReactElement,
+    onclick ?: React.MouseEventHandler<HTMLButtonElement>
 }
+// onClick function type => React.MouseEventHandler<HTMLButtonElement>
 
 
 const sizeStyle = {
@@ -22,7 +24,7 @@ const varientsStyle = {
 
 export const ButtonComponent = (props :  ButtonInterface) => {
     return (
-        <button className={`${varientsStyle[props.varients]} ${sizeStyle[props.size]} inline-block`}>
+        <button className={`${varientsStyle[props.varients]} ${sizeStyle[props.size]} inline-block`} onClick={props.onclick}>
             <div className="flex items-center gap-2">
             {props.icon}
             {props.title}

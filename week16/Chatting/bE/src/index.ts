@@ -60,6 +60,9 @@ wss.on('connection', (soket) => {
             })
         }
 
+        console.log(`someone joined to ${parsedObject.payload.roomId}`);
+        
+
         if(parsedObject.type === 'chat') {
             // @ts-ignore
             const currentUserRoom = soketArray.find(x => x.soket === soket).room
