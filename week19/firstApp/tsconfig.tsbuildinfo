@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/controller/user.controller.ts","./src/controller/todo.controller.ts","./src/middlewares/user.middleware.ts","./src/routes/user.routes.ts","./src/routes/todo.routes.ts","./src/types/express.d.ts","./src/utils/prismclient.ts","./src/utils/hashpassword.ts","./src/utils/jwt.ts","./src/utils/zod.ts"],"version":"5.7.2"}
