@@ -24,3 +24,11 @@ export const signInObject = z.object({
                 .max(64, "Password must not exceed 64 characters."),
 
 })
+
+
+export const todoObjet = z.object({
+    title : z.string().min(1, {message : 'min 10 character needed'}).max(100, {message : 'max 100 character is allowed'}),
+    description : z.string().min(10, {message : 'min 10 character is needed'}).max(200, {message : 'max 200 character is allowed'}),
+    done : z.boolean(),
+    // userId : z.number(),
+})

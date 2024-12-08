@@ -13,12 +13,13 @@ const auth = (req, res, next) => {
         }
         // bug or no bug in return idk
         const userId = (0, jwt_1.verifyJwt)(accessTokenId);
+        // @ts-ignore
         req.userId = userId;
         next();
     }
     catch (error) {
         res.status(500).json({
-            msg: 'no accessToken'
+            msg: 'here no accessToken'
         });
     }
 };

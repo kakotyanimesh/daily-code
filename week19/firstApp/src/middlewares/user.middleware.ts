@@ -15,13 +15,13 @@ export const auth = (req: Request, res: Response, next : NextFunction) => {
 
         // bug or no bug in return idk
 
-        const userId = verifyJwt(accessTokenId as string)
+        const id = verifyJwt(accessTokenId)
         // @ts-ignore
-        req.userId = userId 
+        req.userId = id
         next()
     } catch (error) {
         res.status(500).json({
-            msg : 'no accessToken'
+            msg : 'here no accessToken'
         })
     }
 }

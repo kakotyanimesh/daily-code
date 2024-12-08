@@ -14,6 +14,5 @@ app.use('/api/v1/todo', todoRouter)
 
 
 app.listen(port , () => {
-    console.log(`the app is running at http://localhost:${port}`);
-    
+    console.log(`the app is running at http://localhost:${port}`); 
 })
