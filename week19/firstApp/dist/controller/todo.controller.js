@@ -23,14 +23,23 @@ const createTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     const { title, description, done } = parsedObject.data;
     // @ts-ignore
-    const userId = Number(req.userId);
+    const userId = req.userId;
+    // console.log(userId.id);
     try {
         const todos = yield PrismClient_1.prisma.todo.create({
             data: {
                 title,
                 description,
                 done,
+                // @ts-ignore
                 userId
+            },
+            select: {
+                user: {
+                    select: {
+                        username: true
+                    }
+                }
             }
         });
         res.status(200).json({
@@ -45,8 +54,47 @@ const createTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createTodo = createTodo;
-const updateTodo = (req, res) => {
-};
+const updateTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = parseInt(req.params.id);
+    const parsedObject = zod_1.todoObjet.safeParse(req.body);
+    if (!parsedObject.success) {
+        res.status(403).json({
+            msg: 'Invalid todo details',
+            error: parsedObject.error.errors
+        });
+        return;
+    }
+    const { title, description, done } = parsedObject.data;
+    try {
+        const updatedTodo = yield PrismClient_1.prisma.todo.update({
+            where: { id },
+            data: {
+                title,
+                description,
+                done
+            },
+            select: {
+                user: {
+                    select: {
+                        username: true
+                    }
+                },
+                title: true,
+                description: true,
+                done: true
+            }
+        });
+        res.status(200).json({
+            msg: 'Todo updatedSuccessfully',
+            updatedTodo
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            msg: `Error while updating todo error : ${error}`
+        });
+    }
+});
 exports.updateTodo = updateTodo;
 const getTodo = (req, res) => {
 };

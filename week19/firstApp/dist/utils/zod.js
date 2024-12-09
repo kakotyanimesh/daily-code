@@ -27,7 +27,7 @@ exports.signInObject = zod_1.default.object({
         .max(64, "Password must not exceed 64 characters."),
 });
 exports.todoObjet = zod_1.default.object({
-    title: zod_1.default.string().min(10, { message: 'min 10 character needed' }).max(100, { message: 'max 100 character is allowed' }),
+    title: zod_1.default.string().min(1, { message: 'min 10 character needed' }).max(100, { message: 'max 100 character is allowed' }),
     description: zod_1.default.string().min(10, { message: 'min 10 character is needed' }).max(200, { message: 'max 200 character is allowed' }),
     done: zod_1.default.boolean(),
     // userId : z.number(),

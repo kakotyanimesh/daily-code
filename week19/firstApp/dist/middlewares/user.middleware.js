@@ -12,9 +12,9 @@ const auth = (req, res, next) => {
             return;
         }
         // bug or no bug in return idk
-        const userId = (0, jwt_1.verifyJwt)(accessTokenId);
+        const id = (0, jwt_1.verifyJwt)(accessTokenId);
         // @ts-ignore
-        req.userId = userId;
+        req.userId = id;
         next();
     }
     catch (error) {

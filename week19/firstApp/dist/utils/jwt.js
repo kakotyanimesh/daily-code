@@ -46,10 +46,12 @@ const accessToken = (id) => {
     }, process.env.AcessTokenKey, { expiresIn: process.env.AccessTokenExpiry });
 };
 exports.accessToken = accessToken;
-console.log(process.env.AcessTokenKey);
-console.log(process.env.AccessTokenExpiry);
+// console.log(process.env.AcessTokenKey);
+// console.log(process.env.AccessTokenExpiry);
 const verifyJwt = (accessTokenId) => {
-    return jsonwebtoken_1.default.verify(accessTokenId, process.env.AccessTokenKey);
+    const payload = jsonwebtoken_1.default.verify(accessTokenId, process.env.AcessTokenKey);
+    // @ts-ignore
+    return payload.id;
 };
 exports.verifyJwt = verifyJwt;
 // console.log(verifyJwt('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzMzNjkzOTA4LCJleHAiOjE3MzM3MDExMDh9.fbsL3FCdnRTqKfownHwPzBMxSVVDSlY3inv38rg7jjA'));
