@@ -9,7 +9,6 @@ export const config = {
 export async function middleware (req : NextRequest) {
     const accessToken = req.headers.get('Authorization')
     const secret = process.env.token_Secret || ''
-    console.log(secret);
     
 
     if(!accessToken){
