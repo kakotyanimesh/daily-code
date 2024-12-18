@@ -14,5 +14,5 @@ export const signupObject = z.object({
 export const todoObject = z.object({
     title : z.string().max(100, {message : 'max 100 character is allowed'}),
     description : z.string().max(200, {message : 'max 200 character of description is allowed'}),
-    done : z.boolean()
+    done : z.boolean().optional()
 })
