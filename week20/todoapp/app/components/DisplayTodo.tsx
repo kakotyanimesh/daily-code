@@ -33,7 +33,9 @@ export const DisplayTodo = () => {
         <ul>
             {todolist.map((t, index) => (
                 <div key={index}>
+                    {/* @ts-ignore */}
                     <li>title : {t.title}</li>
+                    {/* @ts-ignore */}
                     <li>description : {t.description}</li>
                 </div>
             ))}
