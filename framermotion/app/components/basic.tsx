@@ -3,11 +3,12 @@
 // import { easeIn, easeOut } from 'motion'
 import { motion } from 'motion/react'
 import { useState } from 'react'
+import { Drag } from './Drag'
 
 export default function Basic() {
     const [degreee, setDegreee] = useState(0)
     const [boxShadow, setBoxShadow] = useState("0px 0px 0px #000")
-    const [draggable, setDraggable] = useState(false)
+    
 
 
     const adddegree = () => {
@@ -96,11 +97,8 @@ export default function Basic() {
             </div>
             
             <h1 className='mt-40'>DRAGGINB COMPONNENT</h1>
-            <motion.div className={`relative ${draggable ? 'bg-red-300' : 'bg-pink-400'} size-72`}>
-                <motion.div className='absolute size-24 bg-red-100'>
-                    
-                </motion.div>
-            </motion.div>
+            <Drag/>
+            
         </div>
     )
 }
