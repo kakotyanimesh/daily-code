@@ -1,9 +1,18 @@
+import { getServerSession } from "next-auth";
 
 
-export default function Home() {
+
+export default async function Home() {
+
+  const session = await getServerSession()
+
   return (
     <div>
-      next app with authentication
+      hi there
+
+      <div>
+        {session?.user ? "hii" : "hellow"}
+      </div>
     </div>
   );
 }
