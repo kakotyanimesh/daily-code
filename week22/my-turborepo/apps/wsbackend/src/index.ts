@@ -1,49 +1,52 @@
-// import { WebSocketServer, WebSocket } from "ws";
-
-// const wss = new WebSocketServer({port : 8080 })
-
-// let user : number = 0
-
-// let allSokets : WebSocket[] = []
-
-// // wss.on is same as making a http connection and it runs a call back function that has a soket object 
-// wss.on("connection", (soket) => {
-//     // soket is a object same as req or res in http protocol
-//     // user = user + 1,
-//     // console.log(`user connected no ${user}`);
-
-//     // to send message or we can use the object that is called when there is a web soket connection in our case its wss.on we can use soket.on ("", and theres another call back function)
-
-
-//     // console.log(soket);
-//     user = user+1
-//     console.log(`user count : ${user}`);
-    
-
-//     allSokets.push(soket)
-//     console.log(`total soket connection ${allSokets.length}`);
-    
-//     soket.on('message', (message) => {
-//         allSokets.map((e, index) => (
-//             e.send(message.toString())
-//         ))
-//     })  
-// })
-
-
 import { WebSocketServer, WebSocket } from "ws";
 
 const wss = new WebSocketServer({port : 8080})
 
+interface User {
+    soket : WebSocket,
+    roomId : string
+}
 
+let inmemorySokets : User[] = []
 
-let allSokets : WebSocket[] = []
+wss.on('connection', (soket) => {
+    soket.on('message', (msg) => {
+        try {
+            const parsedMsg = JSON.parse(msg as unknown as string)
 
-wss.on("connection", (soket) => {
-    allSokets.push(soket)
-    soket.on("message", (mes) => {
-        allSokets.forEach((s) => {
-            s.send(mes.toString())
-        })
+            if(parsedMsg.type === "join"){
+                inmemorySokets.push({
+                    soket,
+                    roomId : parsedMsg.payload.roomId
+                })
+                return
+            }
+
+            if(parsedMsg.type === "chat") {
+                const sender = inmemorySokets.find((x) => x.soket === soket)
+                if(!sender) {
+                    console.log('no sender found');
+                    return
+                }
+
+                const roomId = sender.roomId
+
+                const participants = inmemorySokets.filter((x) => x.roomId === roomId)
+                participants.forEach((x) => {
+                    if(x.soket !== soket){
+                        x.soket.send(parsedMsg.payload.message)
+                    }
+                })
+            }
+        } catch (error) {
+            console.log(`error : ${error}`);
+            
+        }
+    })
+
+    soket.on('close', () => {
+        inmemorySokets = inmemorySokets.filter((x) => x.soket !== soket)
+        console.log(`user disconnected total user : ${inmemorySokets.length}`);
+        
     })
 })
