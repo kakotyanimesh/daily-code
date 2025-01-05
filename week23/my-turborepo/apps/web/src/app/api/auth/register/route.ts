@@ -3,8 +3,8 @@ import { userObject } from "@repo/zod"
 import prisma from "@repo/db";
 import bcrypt from "bcryptjs"
 
-
-export default async function POST(req:NextRequest) {
+// dont use default in backend  
+export async function POST(req:NextRequest) {
     const parsedObject = userObject.safeParse(await req.json())
 
     if(!parsedObject.success) {
@@ -44,3 +44,5 @@ export default async function POST(req:NextRequest) {
         )
     }
 }
+
+

@@ -14,6 +14,7 @@
     "@repo/ui": "*",
     "@repo/zod": "*",
     "@types/bcryptjs": "^2.4.6",
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "next": "^14.2.3",
     "next-auth": "^4.24.11",
