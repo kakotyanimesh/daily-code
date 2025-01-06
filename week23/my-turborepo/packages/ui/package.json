@@ -10,7 +10,8 @@
   "exports": {
     "./styles.css": "./dist/index.css",
     "./card": "./src/card.tsx",
-    "./SignUp" : "./src/SignUp.tsx"
+    "./SignUp" : "./src/SignUp.tsx",
+    "./LogIn" : "./src/LogIn.tsx"
   },
   "license": "MIT",
   "scripts": {

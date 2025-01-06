@@ -7,83 +7,93 @@ import axios from "axios"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
-export const SignUp = () => {
-    const router = useRouter()
+// interface InputProps {
+//     type : string,
+//     Ref : React.RefObject<HTMLInputElement>
+// }
+
+export function SignUp() {
     const emailRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
-    const [err, seterr] = useState("")
-    const [timerID, setTimerID] = useState<NodeJS.Timer | null>(null)
+    const [err, setErr] = useState("")
+    const [timerId, settimerId] = useState<NodeJS.Timer | null>(null)
+    const router = useRouter()
+    const [loading, setLoading] = useState(false)
 
+    const notificationMsg = (msg : string) => {
 
-    const errMsgNotification = (msg : string) => {
-        if(timerID){
+        if(timerId){
             // @ts-ignore
-            clearTimeout(timerID)
+            clearTimeout(timerId)
         }
-
-        seterr(msg)
+        setErr(msg)
         const id = setTimeout(() => {
-            seterr("")
-        }, 2000);
+            setErr("")
+        }, 1000);
 
-        setTimerID(id)
+        settimerId(id)
     }
-
-    const registerUser = async () => {
+    const registeruser = async() => {
         if(!emailRef.current?.value || !passwordRef.current?.value){
-            return errMsgNotification('empty fields bro ')
+            return notificationMsg("empty input field bro ")
         }
         try {
-            const res = await axios.post("http://localhost:3000/api/auth//register", {
-                email : emailRef.current.value,
-                password : passwordRef.current.value
+            setLoading(true)
+            const user = await axios.post("http://localhost:3000/api/auth/register" , {
+                email : emailRef.current?.value,
+                password : passwordRef.current?.value,
             })
 
-            if(res.status === 200) {
-                const login = await signIn('credentials', {
-                    email : emailRef.current.value,
-                    password : passwordRef.current.value,
+            if(user.status === 200){
+                const login = await signIn("credentials", {
+                    email : emailRef.current?.value,
+                    password : passwordRef.current?.value,
                     redirect : false
                 })
 
                 if(login?.error){
-                    errMsgNotification("login failed after registration")
-                    return  
+                    notificationMsg("login failed after user signed up")
+                    return
                 }
 
+                router.push("/dashboard")
             }
-
-            router.push('/dashboard')
-
+            
         } catch (error) {
-            console.log(error);
+            // @ts-ignore
+            console.log(error.response.status);
             
             if(axios.isAxiosError(error) && error.response){
                 if(error.response.status === 409){
-                    errMsgNotification("user already exists bro")
+                    notificationMsg("user already exists")
+                } else if(error.response.status === 400){
+                    notificationMsg('invalid email')
                 } else {
-                    errMsgNotification("something went wrong ")
+                    notificationMsg("server is dead bro")
                 }
-            } else {
-                errMsgNotification("server is dead bro ")
             }
+            
+        }finally{
+            setLoading(false)
         }
     }
-
     return (
         <div className="relative">
-            <div className="flex ui-justify-center ui-flex-col ui-min-h-screen ui-items-center">
-                <div className="ui-text-xl sm:ui-text-2xl ui-space-y-3 ui-w-[500px] ui-p-3 hover:ui-shadow-md hover:ui-shadow-emerald-700
-                ui-transition ui-delay-200 ui-rounded-md ui-bg-gradient-to-r ui-from-pink-900 ui-via-yellow-400 ui-to-blue-500">
-                    <h1 className="ui-text-center">signup as user bro </h1>
-                    <Input type="email" placeholder="animesh33@gmail.com" Ref={emailRef} label="email"  />
-                    <Input type="password" placeholder="Psssword" Ref={passwordRef} label="password"  />
-                    <Button title="signup" onclick={() => registerUser()}  varientType="primary"/>
+            {
+                loading && 
+                <div className="absolute ui-bg-blue-600 ui-bg-opacity-50">
+                    <h1>loading ....</h1>
                 </div>
-            </div>
-            <div className="absolute ui-top-10 ui-right-4">
+            }
+            <div>
+                {/* <input type="email"/> */}
+                <Input type="email" Ref={emailRef} placeholder="email" label="email" />
+                <Input type="password" Ref={passwordRef} placeholder="password" label="password"/>
+                <Button varientType="primary" onclick={() => registeruser()} title="signup"/>
                 {
-                    err && <div className="ui-bg-gradient-to-b ui-w-fit ui-p-3 ui-rounded-md ui-from-blue-400 ui-to-fuchsia-200 ui-via-green-400 ui-top-7 ">{err}</div>
+                    err && <div>
+                        {err}
+                    </div>
                 }
             </div>
         </div>

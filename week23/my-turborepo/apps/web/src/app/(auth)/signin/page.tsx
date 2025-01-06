@@ -1,5 +1,6 @@
-export default function SignIn() {
-    return (
-        <h1>hii </h1>
-    )
+
+import   LogIn from "@repo/ui/LogIn"
+
+export default function SignInpage() {
+    return <LogIn/>
 }

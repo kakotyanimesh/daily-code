@@ -15,6 +15,8 @@ const Varients = {
 export const Button = ({title, onclick, varientType} : ButtonProps) => {
     return (
 
-        <button onClick={onclick} className={`${Varients[varientType]} ui-w-full hover:ui-shadow-md  hover:ui-shadow-blue-600 ui-transition ui-delay-150`}>{title}</button>
+        <button onClick={onclick} className={`${Varients[varientType]} ui-w-full hover:ui-shadow-md  hover:ui-shadow-blue-600 ui-transition ui-delay-150`}>
+            {title}
+        </button>
     )
 }
