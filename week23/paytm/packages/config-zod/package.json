@@ -1,0 +1,12 @@
+{
+  "name": "@repo/zod",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/zod.ts"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  }
+}
