@@ -19,6 +19,22 @@ model User {
   fullName String 
   password String
   creadtedAt DateTime @default(now())
+  accountBalance Account[]
+}
+
+model Account {
+  id Int @default(autoincrement()) 
+  balance Float @default(1000)
+  userId Int @id @unique
+  User User @relation(fields: [userId], references: [id])
 }
 
 
+model Tranction {
+  id Int @default(autoincrement()) @id
+  amount Float
+  senderId Int
+  receiverId Int
+  status String
+  time DateTime @default(now())
+}
