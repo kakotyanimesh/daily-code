@@ -13,28 +13,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model User {
-  id Int @default(autoincrement()) @id
+  id  Int @default(autoincrement()) @id
   username String @unique
-  fullName String 
   password String
-  creadtedAt DateTime @default(now())
-  accountBalance Account[]
+  account Account[]
+  Transcationssent TranscationData[] @relation("SenderByusername")
+  TranscationRecived TranscationData[] @relation("receiverByusername")
 }
+
+// for relationship b/w fields we have to make sure it has bidirectional dont miss the names it should be same bro 
 
 model Account {
-  id Int @default(autoincrement()) 
-  balance Float @default(1000)
-  userId Int @id @unique
-  User User @relation(fields: [userId], references: [id])
+  id Int @default(autoincrement()) @id
+  userID Int 
+  username String @unique
+  // too add some field that has string contrains - MIGRATION PROCESS FIRST WE HAVE TO MAKE IT NULLABLE MEANS NOT REQUIRED FOR NOW AFTER THAT GENERATE THE PRISMA CLIENT AND WILL ADD THAT FIELD IN THE DB BY MANUALLY AFTER that will make it required by remove the question mark bro 
+  balance Float
+  User User @relation(fields: [userID], references: [id])
 }
 
 
-model Tranction {
+model TranscationData {
   id Int @default(autoincrement()) @id
-  amount Float
-  senderId Int
-  receiverId Int
-  status String
+  senderName String @unique
+  receiverName String @unique
+  SenderByusername User @relation("SenderByusername",fields: [senderName], references: [username])
+  receiverByusername User @relation("receiverByusername", fields: [receiverName], references: [username])
+  amount Int
   time DateTime @default(now())
+  status String
 }

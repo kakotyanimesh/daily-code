@@ -2,69 +2,62 @@ import prisma from "@repo/db";
 import { TransctionSchema } from "@repo/zod";
 import { NextRequest, NextResponse } from "next/server";
 
-
-type TransctionMessage = {
+type ErroRespnse = {
     msg : string,
-    transcation ? : [
-        id : number,
-        amount : number,
-        sendername : string,
-        receivername : string,
-        time : Date
-    ],
-    err ? : unknown
+    err ?: unknown
 }
 
+type successResponse = {
+    msg : string,
+    trans : {
+        amount : number,
+        senderName : string,
+        receiverName : string
+    },
+    err ?: unknown
+}
 
 export async function POST(req : NextRequest) {
     const parsedObject = TransctionSchema.safeParse(await req.json())
 
     if(!parsedObject.success){
-        return NextResponse.json({
-            err : `error : ${parsedObject.error.errors}`
-        }, {status : 400})
-    }
-
-    const {senderId, amount, receiverId } = parsedObject.data
-
-    // no transer to same user 
-
-    if(senderId === receiverId) {
-        return NextResponse.json(
-            {msg : "bro same id dont scam us"},
-            {status : 404}
+        return NextResponse.json<ErroRespnse>(
+            {msg : `zod err ${parsedObject.error.errors}`},
+            {status : 400}
         )
     }
 
+    const {senderUsername, amount, receiverUsername } = parsedObject.data
+
     try {
+        const res = await TransctionMethod({senderUsername, amount, receiverUsername})
 
-        const res = await transcationFunction({senderId, amount, receiverId})
-
-        return NextResponse.json(
-            {msg : "transcation completd ", res : res},
-            {status : 200}
+        return NextResponse.json<successResponse>(
+            {msg : "transcation completed", trans : res}
         )
     } catch (error) {
-        return NextResponse.json({msg : 'error in server ', err : process.env.NODE_ENV === "development" ? error : undefined}, {status : 500})
+        return NextResponse.json({msg : `error : ${error}`})
     }
 }
 
-type transcationFunctionType = {
-    senderId : number,
-    amount : number,
-    receiverId : number
+
+type TransctionMethodProps = {
+    senderUsername : string,
+    amount : number
+    receiverUsername : string
+
 }
 
-const transcationFunction = async ({senderId, amount, receiverId} : transcationFunctionType) => {
+const TransctionMethod = async ({senderUsername, amount, receiverUsername} : TransctionMethodProps) => {
     try {
-        const response = await prisma.$transaction(async (tx) => {
+        const transcationss = await prisma.$transaction(async (tx) => {
             const sender = await tx.account.update({
                 data : {
                     balance : {
                         decrement : amount
                     }
                 }, where : {
-                    userId : senderId
+                    username : senderUsername
                 }
             })
 
@@ -78,27 +71,22 @@ const transcationFunction = async ({senderId, amount, receiverId} : transcationF
                         increment : amount
                     }
                 }, where : {
-                    userId : receiverId
+                    username : receiverUsername
                 }
             })
 
-
-            // database entry of transcation 
-            
-            const transcationData = await prisma.tranction.create({
+            const transctionDetails = await tx.transcationData.create({
                 data : {
-                    senderId : sender.id,
                     amount : amount,
-                    receiverId : receiver.id,
-                    status : "Completed"
+                    senderName : senderUsername,
+                    receiverName : receiverUsername,
+                    status : "completed"
                 }
             })
-
-            return transcationData
+            return transctionDetails
         })
 
-
-        return response
+        return transcationss
     } catch (error) {
         throw error
     }
