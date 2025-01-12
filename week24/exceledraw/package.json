@@ -1,5 +1,5 @@
 {
-  "name": "excledraw",
+  "name": "exceledraw",
   "private": true,
   "scripts": {
     "build": "turbo build",
