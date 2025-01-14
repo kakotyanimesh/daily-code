@@ -1,5 +1,5 @@
 {
-  "name": "drawapp",
+  "name": "drawU",
   "private": true,
   "scripts": {
     "build": "turbo build",

@@ -1,5 +1,5 @@
 {
-  "name": "@repo/zod",
+  "name": "@repo/db",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,12 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "exports" : {
-    "." : "./src/index.ts"
+    "." : "./src/db.ts"
+  },
+  "devDependencies": {
+    "@repo/typescript-config" : "workspace:*"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "zod": "^3.24.1"
+    "@prisma/client": "^6.2.1",
+    "prisma": "^6.2.1"
   }
 }

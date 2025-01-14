@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 export const userObject = z.object({
-    username : z.string(),
-    password : z.string()
+    email : z.string().email(),
+    password : z.string(),
+    name : z.string()
 })

@@ -1,29 +1,13 @@
-import express, { Request, Response } from "express"
-import { userObject } from "@repo/zod"
+import express from "express"
+import userRouter from "./routes/user.routes"
 
 
 const app = express()
 
 
-app.post("/", (req : Request, res: Response ) => {
+app.use(express.json())
 
-    const parsedObject = userObject.safeParse(req.body)
-
-    if(!parsedObject.success){
-        res.json({
-            err : `${parsedObject.error.errors}`
-        })
-        return
-    }
-
-    const { username, password } = parsedObject.data
-    res.json({
-        username,
-        password
-    })
-})
-
-
+app.use("/api/v1/users", userRouter)
 
 
 app.listen(4000)
