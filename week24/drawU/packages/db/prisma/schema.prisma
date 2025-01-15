@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// schema for blogging platform 
+
+model User {
+  id Int @default(autoincrement()) @id
+  porfile Profile?
+  // user can exits without a profile when creating user we cant create profile immmediately
+  post Post[]
+}
+
+
+model Profile {
+  id  Int @default(autoincrement()) @id
+  User User @relation(fields: [UserId], references: [id])
+  UserId Int @unique
+  name String?
+}
+
+model Post{
+  id Int @default(autoincrement()) @id
+  author User @relation(fields: [authorId], references: [id]) //author is relation field => field that defines the relation b/w two tables 
+  // one to one and one to many => we used the @relation attribute 
+  authorId Int  // relation scalar field === naming relation_field + Id
+  title String 
+  data String
+  catagory Catagory[]
+}
+
+model Catagory {
+  id Int @default(autoincrement()) @id
+  post Post[]
+}
+
+// the post and catagory have many to many relation as one post have many catagories in that case we don't have to define any field first
+
+
+// create two models that have two relations in b/w them => two fields in two models that related to each other
+
+model NewUser{
+  id Int @default(autoincrement()) @id
+  name String
+  writtenPost PostNEW[] @relation("writtenPost")
+  pinnedPost PostNEW[]  @relation("pinnedPost")
+}
+
+
+model PostNEW {
+  id Int @default(autoincrement()) @id
+  title String
+  authorId Int
+  author NewUser @relation("writtenPost", fields: [authorId], references: [id])
+  pinnedById Int
+  pinnedBy NewUser @relation("pinnedPost", fields: [pinnedById], references: [id])
+}
+
+// one-to-one 
+
+model OneUser {
+  id Int @default(autoincrement()) @id
+  profileOne ProfileOne?
+  // the optional thing we have to use 
+}
+
+
+model ProfileOne {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  user OneUser @relation(fields: [userId], references: [id])
+
+}
+
+// multifield ids in table
+
+model multifieldUSER {
+  id Int @default(autoincrement())
+  firstName String
+  lastName String
+  @@id([firstName, lastName])
+  profile multifieldProfile?
+}
+
+model multifieldProfile {
+  id Int @default(autoincrement())
+  userFirstName String
+  userLastName String
+  user multifieldUSER @relation(fields: [userFirstName, userLastName], references: [firstName, lastName])
+  @@unique([userFirstName, userLastName])
+}
