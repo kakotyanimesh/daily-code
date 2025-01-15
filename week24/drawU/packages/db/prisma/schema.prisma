@@ -14,90 +14,33 @@ datasource db {
 }
 
 
-// schema for blogging platform 
+// user chat room
 
 model User {
+  id String @default(uuid()) @id
+  name String 
+  password String
+  email String @unique
+  adminOfRooms Room[] @relation("adminOfRooms")  // USERS THAT ARE ADMIN TO A ROOM
+  roomsPartOf Room[]   // M-N ONE USER CAN BE PART OF MANY ROOMS AS USERS 
+  chats Chats[]  // one-to-many one user can have multilple chats 
+}
+
+model Room {
   id Int @default(autoincrement()) @id
-  porfile Profile?
-  // user can exits without a profile when creating user we cant create profile immmediately
-  post Post[]
+  slug String @unique
+  adminId String
+  admin User @relation("adminOfRooms",fields: [adminId], references: [id])
+  members User[]  // MANY TO MANY => ONE ROOM CAN HAVE MANY USERS
+  chats Chats[]
 }
 
 
-model Profile {
-  id  Int @default(autoincrement()) @id
-  User User @relation(fields: [UserId], references: [id])
-  UserId Int @unique
-  name String?
-}
-
-model Post{
+model Chats {
   id Int @default(autoincrement()) @id
-  author User @relation(fields: [authorId], references: [id]) //author is relation field => field that defines the relation b/w two tables 
-  // one to one and one to many => we used the @relation attribute 
-  authorId Int  // relation scalar field === naming relation_field + Id
-  title String 
-  data String
-  catagory Catagory[]
-}
-
-model Catagory {
-  id Int @default(autoincrement()) @id
-  post Post[]
-}
-
-// the post and catagory have many to many relation as one post have many catagories in that case we don't have to define any field first
-
-
-// create two models that have two relations in b/w them => two fields in two models that related to each other
-
-model NewUser{
-  id Int @default(autoincrement()) @id
-  name String
-  writtenPost PostNEW[] @relation("writtenPost")
-  pinnedPost PostNEW[]  @relation("pinnedPost")
-}
-
-
-model PostNEW {
-  id Int @default(autoincrement()) @id
-  title String
-  authorId Int
-  author NewUser @relation("writtenPost", fields: [authorId], references: [id])
-  pinnedById Int
-  pinnedBy NewUser @relation("pinnedPost", fields: [pinnedById], references: [id])
-}
-
-// one-to-one 
-
-model OneUser {
-  id Int @default(autoincrement()) @id
-  profileOne ProfileOne?
-  // the optional thing we have to use 
-}
-
-
-model ProfileOne {
-  id Int @id @default(autoincrement())
-  userId Int @unique
-  user OneUser @relation(fields: [userId], references: [id])
-
-}
-
-// multifield ids in table
-
-model multifieldUSER {
-  id Int @default(autoincrement())
-  firstName String
-  lastName String
-  @@id([firstName, lastName])
-  profile multifieldProfile?
-}
-
-model multifieldProfile {
-  id Int @default(autoincrement())
-  userFirstName String
-  userLastName String
-  user multifieldUSER @relation(fields: [userFirstName, userLastName], references: [firstName, lastName])
-  @@unique([userFirstName, userLastName])
+  messages String
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  roomId Int
+  room Room @relation(fields: [roomId], references: [id])
 }
