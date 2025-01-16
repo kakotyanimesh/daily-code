@@ -76,8 +76,9 @@ export const signin = async (req : Request, res : Response) => {
             return
         }
 
-        const generatedAccessToken = jwt.sign(user.id, process.env.ACCESS_TOKEN_SECRET as string)
-        const generatedRefreshToken = jwt.sign(user.id, process.env.REFRESH_TOKEN_SECRET as string)
+        //  dont forget to add the { brackets } while creating the token 
+        const generatedAccessToken = jwt.sign({userId : user.id}, process.env.ACCESS_TOKEN_SECRET as string, {expiresIn : process.env.ACCESS_TOKEN_EXPIRY})
+        const generatedRefreshToken = jwt.sign({userId : user.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn : process.env.REFRESH_TOKEN_EXPIRY})
 
         const options = {
             httpOnly : true,

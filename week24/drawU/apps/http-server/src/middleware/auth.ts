@@ -10,6 +10,8 @@ export const authMiddleware = (req : Request, res : Response, next : NextFunctio
         res.status(401).json({msg : "unauthorized no access token"})
         return
     }
+    
+    
 
     try {
         const verify = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET as string) as JwtPayload
@@ -24,6 +26,7 @@ export const authMiddleware = (req : Request, res : Response, next : NextFunctio
         
         
         req.userId = verify.userId
+        
         next()
 
     } catch (error) {
