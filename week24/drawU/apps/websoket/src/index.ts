@@ -1,122 +1,133 @@
-import { WebSocket, WebSocketServer } from "ws";
+/**
+ * create wss 
+ * user array
+ * verufy the token
+ * get user id 
+ * send to users array to store state in backend 
+ * check types if user wants to join room then update the user object of users Array
+ * leave stop remove the roomId
+ * type check => chat, get msg , room id then 
+ * db call
+ * server to other users
+ */
+
+import WebSocket, { WebSocketServer } from "ws";
+import jwt from "jsonwebtoken"
 require("dotenv").config()
-import jwt, { JwtPayload } from "jsonwebtoken"
 import { prisma } from "@repo/db"
 
 const wss = new WebSocketServer({port : 8080})
 
-// in websoket server we need to maintain a state in the backend , here taking an ugly approach of global variable of a certain type 
-
 interface User {
     ws : WebSocket,
-    rooms : string[] // user can join multiple rooms 
+    rooms : string[],
     userId : string
 }
 
 let usersArray : User[] = []
 
-wss.on("connection", (ws , req) => {
-    const url = req.url
-    if(url){
-        return
-    }
-
-    const queryParams = new URLSearchParams(url?.split("?")[1]) // url => wss:localhost:6060/?token="asasdasd" as i need the first index element
-    console.log(queryParams);
+wss.on("connection", (ws, req) => {
+    try {
+        const url = req.url
     
-    const token = queryParams.get("token") || ""
-
-    const verifiedToken = verifyjwt(token)
-
-    if(!verifiedToken){
-        ws.close()
-        return null
-    }
-
-    // AFTER VERIFICATION one user will be added to Users Array
-
-    usersArray.push({
-        ws,
-        rooms : [],
-        userId : verifiedToken
-    })
-
-    // now when user sends messages to join room we update the rooms array then send messages to those rooms which he joins for a moment now
-
-
-    ws.on("message", async(msg) => {
-        const parsedMsg = JSON.parse(msg as unknown as string)
-
-        if(parsedMsg.type === "join"){
-            // find the websoket of my user from the global array then push roomid to that single user object of User array 
-            const user = usersArray.find(x => x.ws === ws) // find makes each object itteratable then checks which object's ws is matched to ws of mine
-
-            user?.rooms.push(parsedMsg.roomId)
+        if(!url){
+            ws.close()
+            return
+        }
+    
+        const queryparams = new URLSearchParams(url.split("?")[1])
+        const token = queryparams.get("token")
+    
+        if(!token){
+            ws.close()
+            return
+        }
+    
+        const userId = verifyToken(token)
+    
+        if(!userId){
+            ws.close()
+            return
         }
 
-        if(parsedMsg.type === "leave"){
-            // date => type = "leave" and roomId = 12
-            const user = usersArray.find(x => x.ws === ws)
-            // find the user if it exits in the usersArray
+        
+        usersArray.push({
+            ws,
+            rooms : [],
+            userId
+        })
 
-            if(!user){
-                return "no user"
+        ws.on('message', async(msg) => {
+            const parsedObject = JSON.parse(msg.toString())
+
+            if(parsedObject.type === "join"){
+                const user = usersArray.find(x => x.ws === ws)
+
+                user?.rooms.push(parsedObject.roomId)
             }
 
-            // update the users room array means remove the roomID FROM the user
+            if(parsedObject.type === "leave"){
+                const user = usersArray.find(x => x.ws === ws)
 
-            user.rooms = user.rooms.filter(x => x === parsedMsg.roomId)
-        }
-
-        if(parsedMsg.type === "chat"){
-            const roomId = parsedMsg.roomId 
-            const message = parsedMsg.msg 
-
-            console.log(message +  "msg");
-            console.log(roomId + "roomID");
-            
+                if(!user){
+                    return
+                }
+                user.rooms = user?.rooms.filter(x => x === parsedObject.roomId )
+            }
             
 
-            await prisma.chats.create({
-                data : {
-                    roomId : roomId,
-                    messages : message,
-                    userId : verifiedToken
-                }
-            })
+            if(parsedObject.type === "chat"){
+                const {roomId, msg } = parsedObject
 
-            usersArray.forEach(user => {
-                if(user.rooms.includes(roomId)){
-                    user.ws.send(JSON.stringify({
-                        type : "chat",
-                        message,
-                        roomId
-                    }))
-                }
-            })
-        }
+                try {
+                    const chats = await prisma.chats.create({
+                        data : {
+                            messages : msg, 
+                            roomId,
+                            userId
+                        }
+                    })
 
-    })
+                    return chats
+                } catch (error) {
+                    console.log(error + "error in sending messages");
+                    
+                }
+
+
+                usersArray.forEach(user => {
+                    if(user.rooms.includes(roomId)){
+                        user.ws.send(JSON.stringify({
+                            type : "chat",
+                            roomId : roomId,
+                            message : msg
+                        }))
+                    }
+                })
+            }
+        })
+
+    } catch (error) {
+        console.log(error + " in sendiing etxt adsasd");
+        
+    }
+
+
 })
 
 
-const verifyjwt = (token : string) : string | null => {
+const verifyToken = (token : string) : string | null => {
     try {
-        const verify = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string) as JwtPayload
-
-        if(typeof verify === "string"){
+        const verifiedJwt = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string)
+    
+        if(typeof verifiedJwt !== "object" || !verifiedJwt.userId){
             return null
         }
-
-        if(!verify || !verify.userId ){
-            return null
-        }
-
-        return verify.userId
-
+    
+        return verifiedJwt.userId
     } catch (error) {
-        console.log(error);
-        
+        console.log(`error in verifying jwt : ${error}`);
         return null
+        
     }
 }
