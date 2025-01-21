@@ -1,39 +1,18 @@
-"use client"
 
-import { useRef } from "react"
 import Button from "./button"
 import InputElememt from "./InputElements"
-import axios from "axios"
-import { useRouter } from "next/navigation"
 
-export default function AuthPage ({isSignUp} : {
+
+
+interface AuthPageProps {
     isSignUp : boolean
-}) {
-    const router = useRouter()
-    const emailRef = useRef<HTMLInputElement>(null)
-    const passwordRef = useRef<HTMLInputElement>(null)
-    const nameRef = useRef<HTMLInputElement>(null)
+    emailRef : React.Ref<HTMLInputElement>
+    passwordRef : React.Ref<HTMLInputElement>
+    nameRef ?: React.Ref<HTMLInputElement>
+    onclickfn : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+}
 
-
-    const signup = async() => {
-        const user = await axios.post("http://localhost:4001/api/v1/user/signup",{
-            name : nameRef.current?.value,
-            email : emailRef.current?.value,
-            password : passwordRef.current?.value
-        })
-        
-        return user
-        router.push('/signin')
-    }
-
-    const signin = async() => {
-        const loggedIn = await axios.post("http://localhost:4001/api/v1/signin", {
-            email : emailRef.current?.value,
-            password : passwordRef.current?.value
-        })
-
-        return loggedIn
-    }
+export default function AuthPage ({isSignUp, emailRef, passwordRef, nameRef, onclickfn} : AuthPageProps) {
 
     return (
 
@@ -44,9 +23,9 @@ export default function AuthPage ({isSignUp} : {
                 <InputElememt type="password" placeholder="password" Ref={passwordRef}/>
                 {
                     isSignUp ? 
-                        <Button title="signup" onclick={() => signup()}/> 
+                        <Button title="signup" onclick={onclickfn}/> 
                     :
-                        <Button title="signin" onclick={() => signin()}/>
+                        <Button title="signin" onclick={onclickfn}/>
 
                 }
             </div>
