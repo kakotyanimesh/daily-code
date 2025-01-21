@@ -19,9 +19,9 @@ model User {
   email           String      @unique
   passowrd        String    
   name            String    
-  adminsOfRoom    Room[]      @relation("adminsOfRoom")
-  membersOfRoom   Room[]     
+  adminsOfRoom    Room[]      @relation("adminsOfRoom")  
   drawingsOfUser  Drawings[]  @relation("drawingsOfUser")
+  membersShip     Members[]   @relation("userMemberofRooms")
 }
 
 model Room {
@@ -29,8 +29,9 @@ model Room {
   slug          String 
   admin         User    @relation("adminsOfRoom" ,fields: [adminId], references: [id])
   adminId       String
-  members       User[]
   drawings      Drawings[]
+  members       Members[]
+
 }
 
 
@@ -41,4 +42,13 @@ model Drawings {
   shapes        String
   room          Room    @relation(fields: [roomId], references: [id])
   roomId        Int
+}
+
+
+model Members {
+  id          Int     @default(autoincrement())                       @id
+  room        Room    @relation(fields: [roomId], references: [id])
+  roomId      Int     
+  members     User    @relation("userMemberofRooms", fields: [membersId], references: [id])
+  membersId   String
 }

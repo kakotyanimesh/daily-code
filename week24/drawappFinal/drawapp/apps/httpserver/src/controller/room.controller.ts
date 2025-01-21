@@ -22,14 +22,13 @@ export const createRoom = async(req: Request, res : Response) => {
                 slug : parsedObject.data.slug,
                 adminId : userId
             },select : {
-                members : {
-                    select : {
-                        name : true
-                    }
-                },
                 admin : {
                     select : {
                         name : true
+                    }
+                },members : {
+                    select : {
+                        id : true
                     }
                 }
             }
@@ -50,7 +49,7 @@ export const createRoom = async(req: Request, res : Response) => {
 
 export const rooms = async(req : Request , res : Response) => {
     try {
-        const allRooms = await prismaClient.room.findMany()
+        const allRooms = await prismaClient.members.findMany()
 
         res.status(200).json({
             rooms : allRooms
@@ -78,11 +77,10 @@ export const joinRoom = async(req : Request, res : Response) => {
         if(!userId){
             return
         }
-        const joinRoom = await prismaClient.room.create({
-            where : {
-                id : Number(parsedObject.data.id)
-            }, data : {
-                members : userId
+        const joinRoom = await prismaClient.members.create({
+            data : {
+                roomId : parsedObject.data.id,
+                membersId : userId
             }
         })
 
@@ -97,3 +95,4 @@ export const joinRoom = async(req : Request, res : Response) => {
     }
 
 }
+

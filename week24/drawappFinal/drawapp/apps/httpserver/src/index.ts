@@ -1,10 +1,15 @@
 import express from "express"
 import roomRouter from "./routes/room.router"
 import userRoute from "./routes/user.router"
+import cors from "cors"
 import cookieParser from "cookie-parser"
 
 const app = express()
 require("dotenv").config({path : '../../.env'})
+
+app.use(cors({
+    origin : ["http://localhost:3000"]
+}))
 
 // define the path of dotenv
 
