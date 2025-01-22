@@ -30,7 +30,8 @@ export const createRoom = async(req: Request, res : Response) => {
                     select : {
                         id : true
                     }
-                }
+                },
+                id : true
             }
         })
 
@@ -96,3 +97,30 @@ export const joinRoom = async(req : Request, res : Response) => {
 
 }
 
+
+
+export const getShapes = async (req : Request, res : Response) => {
+
+    try {
+        const userId = req.userId
+        const roomId = Number(req.params.roomId)
+        const shapes = await prismaClient.drawings.findMany({
+            where : {
+                roomId : roomId
+            }, select : {
+                shapes : true
+            }, orderBy : {
+                id : "desc"
+            }, take : 1000
+        })
+
+        res.status(200).json({
+            shapes
+        })
+    } catch (error) {
+        res.status(500).json({
+            msg : `server error : ${error}`
+
+        })
+    }
+}

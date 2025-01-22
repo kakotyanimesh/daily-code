@@ -2,6 +2,7 @@
 import WebSocket, { WebSocketServer } from "ws";
 import { extractToken, verifyToken } from "./utils/tokenVerify";
 import {prismaClient} from "@repo/db"
+import { json } from "react-router-dom";
 
 require("dotenv").config({path : "../../.env"})
 
@@ -44,8 +45,15 @@ wss.on("connection", (ws, req) => {
     ws.on("message", async (msg) => {
         // msg is in object parse it so that we can access its data
         try {
-            const parsedMsg = JSON.parse(msg as unknown as string)
+            // const parsedMsg = JSON.parse(msg as unknown as string)
+            
             // console.log(parsedMsg + parsedMsg.userId);
+            let parsedMsg
+            if(typeof msg !== "string"){
+                parsedMsg = JSON.parse(msg.toString())
+            } else { 
+                parsedMsg = JSON.parse(msg)
+            }
             
 
             if(parsedMsg.type === "join"){
@@ -63,7 +71,7 @@ wss.on("connection", (ws, req) => {
                     return
                 }
 
-                user.rooms = user.rooms.filter(x => x !== parsedMsg.roomId)
+                user.rooms = user.rooms.filter(x => x === parsedMsg.roomId)
                 // console.log(user.rooms);
                 
 
@@ -71,12 +79,12 @@ wss.on("connection", (ws, req) => {
 
 
             if(parsedMsg.type === "draw"){
-                const {roomId, drawings} = parsedMsg
+                const {roomId, drawings} = parsedMsg    
 
                 try {
                     await prismaClient.drawings.create({
                         data : {
-                            roomId,
+                            roomId : parseInt(roomId),
                             artistsId : decoded,
                             shapes : drawings
                         }
@@ -86,13 +94,14 @@ wss.on("connection", (ws, req) => {
                         if(users.rooms.includes(roomId)){
                             users.ws.send(JSON.stringify({
                                 type : "draw",
+                                roomId : Number(roomId),
                                 drawings : drawings
                             }))
                         }
                     })
                 } catch (error) {
                     ws.send(JSON.stringify({
-                        type : "error",
+                        type : "error" + error,
 
                     }))
                 }
@@ -104,7 +113,6 @@ wss.on("connection", (ws, req) => {
 
     
 })
-
 
 
 

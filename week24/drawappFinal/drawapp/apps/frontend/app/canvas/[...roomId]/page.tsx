@@ -1,61 +1,34 @@
-"use client"
+// "use client"
 
-import { useEffect, useRef } from "react"
+import RoomCanvas from "@/app/componets/roomCanvas";
 
-export default function Canvas () {
-    const canvasRef = useRef<HTMLCanvasElement>(null)
+// import { drawInit } from "@/draw"
+// import { useEffect, useRef } from "react"
 
-    useEffect(() => {
-      const refference = canvasRef.current
-      
-      
-      const ctx = refference?.getContext("2d")
+// export default function CanvasPage () {
+//     const canvasRef = useRef<HTMLCanvasElement>(null)
 
-      
-      let initialX = 0
-      let initialY = 0
+//     useEffect(() => {
 
-      refference?.addEventListener("mousedown", (e) => {
-        
-        initialX = e.clientX
-        initialY = e.clientY
-        console.log(initialX + "mouse down x ");
-        // console.log(initialY);
-        
-      })
+//         if(canvasRef.current){
+//             drawInit(canvasRef.current, "2")
+//         }
 
-    //   refference?.addEventListener("mousemove", (e) => {
-    //     if(!drawing){
-    //         const width = e.clientX - initialX
-    //         const height = e.clientY - initialY
-
-    //         ctx?.clearRect(0, 0, refference.width, refference.height)
-    //         ctx?.beginPath()
-    //         ctx?.rect(initialX, initialY, width, height)
-    //         ctx?.closePath()
-    //     }
-    //   })
+//     }, [canvasRef])
     
+//     return (
+//         <canvas width={window.innerWidth} height={1080} ref={canvasRef}></canvas>
+//     )
+// }
 
-      refference?.addEventListener("mouseup", (e) => {
-        console.log(`mouse up width ${e.clientX}` );
-        const width = e.clientX - initialX
-        const height = e.clientY - initialY
 
-        ctx?.strokeRect(initialX, initialY, width, height)
-        
-        
-       
-      })
-      
-    }, [canvasRef])
-    
-    
+export default async function CanvasRoom({params} : {
+    params : {
+        roomId : string
+    }
+}) {
+    const roomId = (await params).roomId
     return (
-        <div>
-
-            <canvas ref={canvasRef} className="w-full h-[100vw]" style={{backgroundColor : "red"}}>
-            </canvas>
-        </div> 
+        <RoomCanvas roomId={roomId} /> 
     )
 }
