@@ -2,10 +2,14 @@ import cookieParser from "cookie-parser"
 import express from "express"
 import userRouter from "./routes/user.routes"
 import roomRouter from "./routes/room.router"
+import cors from "cors"
 
 require("dotenv").config({path : "../../.env"})
 const app = express()
-
+app.use(cors({
+    origin : ['http://localhost:3000'], 
+    methods : ['POST', 'GET']
+}))
 
 app.use(express.json())
 app.use(cookieParser())

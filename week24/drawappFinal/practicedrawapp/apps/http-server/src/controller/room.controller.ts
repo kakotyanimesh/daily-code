@@ -41,16 +41,18 @@ export const createRoom = async(req : Request, res : Response) => {
 export const getShapes = async(req : Request, res : Response) => {
     const roomId = req.params.roomId
 
-    // if(!roomId){
-    //     res.status(403).json({
-    //         msg : "no roomId"
-    //     })
-    //     return
-    // }
+    if(!roomId){
+        res.status(403).json({
+            msg : "no roomId"
+        })
+        return
+    }
     try {
         const shapes = await prismaClient.drawings.findMany({
             where : {
                 roomId : Number(roomId)
+            }, select : {
+                shapes : true
             }
         })
 

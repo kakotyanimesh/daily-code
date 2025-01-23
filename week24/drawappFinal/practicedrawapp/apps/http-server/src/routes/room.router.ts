@@ -6,6 +6,6 @@ const roomRouter : Router = Router()
 
 
 roomRouter.post("/createRoom", authMiddleware, createRoom )
-roomRouter.get("/getShapes/:roomId", authMiddleware, getShapes)
+roomRouter.get("/getShapes/:roomId", getShapes)
 
 export default roomRouter
