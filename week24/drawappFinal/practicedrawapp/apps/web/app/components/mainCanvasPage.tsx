@@ -4,22 +4,21 @@ import { useEffect, useRef, useState } from "react"
 import { draw } from "../../utils/draw"
 import { ButtonIcons } from "./Icons"
 import {Circle, Pencil, RectangleHorizontalIcon} from "lucide-react"
+import { Game } from "../../utils/game"
 
 export type Tool = "circle" | "rect"
 
 export default function MainCanvas({roomId} : {roomId : string}) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null)
+    const [game, setGame] = useState<Game>()
     const [selectedTool, setselectedTool] = useState<Tool>("circle")
   
 
     console.log(selectedTool);
     
     useEffect(() => {
-      //@ts-ignore
-      window.selectedTool = selectedTool 
-    
-      
-    }, [selectedTool])
+      game?.setTool(selectedTool)
+    }, [selectedTool, game])
     
 
     
@@ -29,8 +28,13 @@ export default function MainCanvas({roomId} : {roomId : string}) {
       const ws = new WebSocket(`ws://localhost:8080?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYjQ3MmVhMy0yM2FjLTQ0OTQtYmNjZS1jMTQ1NjIzMmNjNDkiLCJpYXQiOjE3Mzc3MjM2OTJ9.GFQnQtQvvw2j9-r50bC52Aqexp9-_UaqeMoxopWpZMg
 `)
       
-      if(!canvas){
-        return
+      if(canvas){
+        const g = new Game(canvas, Number(roomId), ws)
+        setGame(g)
+
+        return () => {
+          g.destroy()
+        }
       }
 
       ws.onopen = () => {
@@ -41,14 +45,6 @@ export default function MainCanvas({roomId} : {roomId : string}) {
       }
 
       
-      
-      
-
-      draw(canvas, ws, Number(roomId) )  
-    
-      return () => {
-        ws.onopen = null
-      }
     }, [canvasRef])
 
     
