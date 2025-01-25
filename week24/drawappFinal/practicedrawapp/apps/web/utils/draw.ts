@@ -1,4 +1,5 @@
 import axios from "axios"
+import { Tool } from "../app/components/mainCanvasPage"
 
 type shapes = {
     type : "rect",
@@ -7,9 +8,16 @@ type shapes = {
     width : number,
     height : number
 
-}
-
-
+} | {
+    type : "circle",
+    x : number,
+    y : number,
+    rad : number,
+    width : number,
+    height : number,
+    startAngle : number,
+    endAngle : number
+} 
 
 
 export const draw = async(canvas : HTMLCanvasElement, ws : WebSocket, roomId : number) => {
@@ -20,6 +28,9 @@ export const draw = async(canvas : HTMLCanvasElement, ws : WebSocket, roomId : n
     }
 
     
+    // ale
+    
+    
     
     
     // console.log(await getShapesFfromServer(roomId));
@@ -29,28 +40,25 @@ export const draw = async(canvas : HTMLCanvasElement, ws : WebSocket, roomId : n
 
     const shapesArray : shapes[] = await getShapesFfromServer(roomId)
 
-    
-    clearCanvas(ctx, canvas, shapesArray);
+    //@ts-ignore
+    const tool = window.selectedTool
+    clearCanvas(ctx,canvas, shapesArray);
 
     
 
     ws.onmessage = (e) => {
-        const shapesss = JSON.parse(e.data)
-        console.log(shapesss.message);
-        if(shapesss.type === "draw"){
-            const getShpesObjet : shapes= {
-                type : shapesss.message.type,
-                x : shapesss.message.x,
-                y : shapesss.message.y,
-                width : shapesss.message.width,
-                height : shapesss.message.height 
-            }
-            // console.log(getShpesObjet);
-            // getting error here as im sending string from the backend but no anymore 
-            console.log(getShpesObjet);
+        // console.log(e);
+        
+        const messageData = JSON.parse(e.data)
+        // console.log(messageData.message);
+        if(messageData.type === "draw"){
+            const data = messageData.message
+            console.log(data);
             
-            shapesArray.push(getShpesObjet)
-            clearCanvas(ctx, canvas, shapesArray)
+            // const shapeObj : shapes = CreateShpesObject({tool, data.})
+            
+            // shapesArray.push(shapeObj)
+            // clearCanvas(ctx, canvas, shapesArray)
         }
     }
 
@@ -58,28 +66,27 @@ export const draw = async(canvas : HTMLCanvasElement, ws : WebSocket, roomId : n
     let draw = false
     let initialX = 0
     let initialY = 0
+    let currentTool : Tool = tool
+    
 
     canvas.addEventListener("mousedown", (e) => {
         draw = true
         initialX = e.clientX
         initialY = e.clientY
+        currentTool = tool
     })
 
     canvas.addEventListener("mouseup", (e) => {
         draw = false
-        const width = e.clientX - initialX
-        const height = e.clientY - initialY
+        const width = e.offsetX - initialX
+        const height = e.offsetY - initialY
+
         
-        const shapesobject : shapes = {
-            type : "rect",
-            x : initialX,
-            y : initialY,
-            width : width,
-            height : height
-        }
-
+        const shapesobject  = CreateShpesObject({tool , initialX, initialY, width, height})
+        console.log(shapesobject);
+        
+        
         shapesArray.push(shapesobject)
-
         ws.send(JSON.stringify({
             type : "draw",
             roomId : roomId,
@@ -87,16 +94,23 @@ export const draw = async(canvas : HTMLCanvasElement, ws : WebSocket, roomId : n
         }))
 
 
-
+        clearCanvas(ctx, canvas, shapesArray)
     })
 
     canvas.addEventListener("mousemove", (e) => {
         if(draw){
-            const width = e.clientX - initialX
-            const height = e.clientY - initialY
+            const width = e.offsetX - initialX
+            const height = e.offsetY - initialY
 
             clearCanvas(ctx, canvas, shapesArray)
-            ctx.strokeRect(initialX, initialY, width, height)
+            if(currentTool === "rect") {
+                ctx.strokeRect(initialX, initialY, width, height)
+            } else if(currentTool === "circle"){
+                const rad = Math.max(width, height)/2
+                ctx.beginPath()
+                ctx.arc(initialX , initialY, Math.abs(rad), 0, Math.PI * 2)
+                ctx.stroke()
+            }
         }
     })
 }
@@ -106,8 +120,15 @@ export const draw = async(canvas : HTMLCanvasElement, ws : WebSocket, roomId : n
 const clearCanvas = (ctx : CanvasRenderingContext2D, canvas : HTMLCanvasElement, shapesArray : shapes[]) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    shapesArray.map((shape) => {
-        ctx.strokeRect(shape.x, shape.y, shape.width, shape.height)
+    shapesArray.forEach((shape) => {
+        
+        if(shape.type === "rect"){
+            ctx.strokeRect(shape.x, shape.y, shape.width, shape.height)
+        } else if (shape.type === "circle"){
+            ctx.beginPath()
+            ctx.arc(shape.x, shape.y, shape.rad, shape.startAngle, shape.endAngle)
+            ctx.stroke()
+        }
     })
 }
 
@@ -124,4 +145,38 @@ const getShapesFfromServer = async(roomId : number) => {
     })
     
     return shapes
+}
+
+
+interface CreateShpapesTypes {
+    tool :Tool,
+    initialX : number,
+    initialY : number,
+    width : number,
+    height : number,
+}
+
+// we have a define cases so rather running if elses we can use switch case 
+const CreateShpesObject = ({tool, initialX, initialY, width, height} : CreateShpapesTypes ) : shapes => {
+    switch (tool){
+        case "circle" : 
+            return {
+                type : "circle",
+                x : initialX,
+                y : initialY,
+                rad : Math.abs(Math.max(width, height)) /2,
+                width : width,
+                height : height,
+                startAngle : 0,
+                endAngle : Math.PI * 2
+            }
+        case "rect" : 
+            return {
+                type : "rect",
+                x : initialX,
+                y : initialY,
+                width,
+                height
+            }
+    }
 }
